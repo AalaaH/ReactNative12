@@ -1,15 +1,41 @@
 
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useState } from 'react';
+import { Button, StyleSheet, Text, TextInput, View, FlatList } from 'react-native';
+import GoalItem from './components/GoatItem';
 
 export default function App() {
+  const [enteredcourse, setEnteredcourse]= useState('');
+  const [courseGoals, SetcourseGoals]= useState([]);
+
+  function goalsInputHandler(entertext){
+setEnteredcourse(entertext);
+  };
+
+  function addGoalsHandler(){
+    SetcourseGoals(currentcoursegoals=> [...currentcoursegoals,
+      {text: enteredcourse, id:Math.random().toString()}]);
+  };
+  
   return (
     <View style={styles.appContainer}>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.textContainer} placeholder='Enter Your Course Name Here !'></TextInput>
-        <Button title='Add Course'></Button>
+        <TextInput style={styles.textContainer} 
+        placeholder='Enter Your Course Name Here !'
+        onChangeText={goalsInputHandler}>
+        </TextInput>
+        <Button title='Add Course' onPress={addGoalsHandler}></Button>
       </View>   
       <View style={styles.coursesContainer}>
-        <Text>List of Courses .....</Text>
+      <FlatList 
+      data={courseGoals} 
+      renderItem={(itemData)=>{
+         return <GoalItem text={itemData.item.text}/>
+      }}
+      keyExtractor={(item,index) =>{
+        return item.id;
+      }} 
+      alwaysBounceHorizontal={false}>
+      </FlatList>
        </View>   
     </View>
   );
@@ -22,22 +48,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:16
 
   },
-  inputContainer:{
-  flex:1,
-  flexDirection:'row',
-  justifyContent:'space-between',
-  alignItems:'center',
-  marginBottom:24,
-  borderBottomWidth:1,
-  borderBotthomColor:'#cccccc',
-  },
-  textContainer:{
-borderWidth:1,
-borderColor:'#cccccc',
-width:'70%',
-marginRight:8,
-padding:8
-  },
+ 
 coursesContainer:{
     flex:5,
 }
